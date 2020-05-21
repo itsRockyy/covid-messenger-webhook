@@ -1,0 +1,23 @@
+{
+  "name": "covid-messenger-webhook",
+  "version": "1.0.0",
+  "description": "A live webhook that can receive webhook events from the Messenger Platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsRockyy/covid-messenger-webhook.git"
+  },
+  "keywords": [
+    "messenger",
+    "covid"
+  ],
+  "author": "Abhijeet Saxena",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itsRockyy/covid-messenger-webhook/issues"
+  },
+  "homepage": "https://github.com/itsRockyy/covid-messenger-webhook#readme"
+}
