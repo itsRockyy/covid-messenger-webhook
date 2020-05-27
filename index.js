@@ -23,6 +23,13 @@ app.get("/webhook", (req, res) => {
   if (mode && token) {
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
       console.log("WEBHOOK_VERIFIED");
+      const sender_psid = webhook_event.sender.id;
+
+      let response = {
+        text: `Welcome to COVID Assistant. Please select one of the following options:`,
+      };
+
+      callSendAPI(sender_psid, response);
       res.status(200).send(challenge);
     } else res.sendStatus(403);
   }
