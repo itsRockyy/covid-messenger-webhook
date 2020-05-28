@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -7,6 +9,7 @@ const handleMessage = require("./src/text-handler");
 const handlePostback = require("./src/postback-handler");
 
 const isProd = process.env.TIER === "prod";
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "";
 const APP_PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
@@ -22,7 +25,7 @@ app.get("/webhook", (req, res) => {
   const challenge = req.query["hub.challenge"];
 
   if (mode && token) {
-    if (mode === "subscribe" && token === process.env.VERIFY_TOKEN)
+    if (mode === "subscribe" && token === VERIFY_TOKEN)
       res.status(200).send(challenge);
     else res.sendStatus(403);
   }
