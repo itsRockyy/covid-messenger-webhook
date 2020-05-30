@@ -1,34 +1,47 @@
-const handleMessage = ({ text = "" }) => {
+const dialogflow = require("dialogflow");
+
+const projectId = process.env.DIALOGFLOW_PROJECT_ID;
+
+const config = {
+  credentials: {
+    private_key: process.env.DIALOGFLOW_PRIVATE_KEY,
+    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+  },
+};
+
+const handleMessage = async ({ text = "" }, senderPSID) => {
   let response = "";
 
-  if (["hi", "hello", "greetings", "help"].includes(text.toLowerCase())) {
-    response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: "Greetings. Please select one of the following —",
-          buttons: [
-            {
-              type: "postback",
-              title: "COVID Tracker",
-              payload: "covid-tracker",
-            },
-            {
-              type: "postback",
-              title: "No Thanks",
-              payload: "exit",
-            },
-          ],
+  try {
+    // Create a new session
+    const sessionClient = new dialogflow.SessionsClient(config);
+    const sessionPath = sessionClient.sessionPath(projectId, senderPSID);
+
+    // The text query request.
+    const request = {
+      session: sessionPath,
+      queryInput: {
+        text: {
+          // The query to send to the dialogflow agent
+          text,
+          // The language used by the client (en-US)
+          languageCode: "en-US",
         },
       },
     };
-  } else {
-    response = {
-      text: `Didn't understand :( Please type 'Hi', 'Hello', 'Greetings' or 'help' to begin.`,
-    };
-  }
+    // Send request and log result
+    const responses = await sessionClient.detectIntent(request);
+    const result = responses[0].queryResult;
+    const { queryText = "", fulfillmentText = "", intent = {} } = result;
+    if (result.intent) console.log(`Intent: ${intent.displayName}`);
+    else console.log(`  No intent matched.`);
 
+    response = {
+      text: fulfillmentText,
+    };
+  } catch (err) {
+    console.log(err);
+  }
   return response;
 };
 
