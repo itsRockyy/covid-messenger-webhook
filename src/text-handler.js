@@ -16,8 +16,8 @@ const handleMessage = ({ text = "" }) => {
             },
             {
               type: "postback",
-              title: "Greet me!",
-              payload: "greet",
+              title: "No Thanks",
+              payload: "exit",
             },
           ],
         },
