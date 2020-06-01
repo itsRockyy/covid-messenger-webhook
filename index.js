@@ -31,23 +31,21 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-app.post("/webhook", (req, res) => {
+app.post("/webhook", async (req, res) => {
   const body = req.body;
   let responseBody = {};
 
   if (body.object === "page") {
-    body.entry.forEach(function (entry) {
-      const webhookEvent = entry.messaging[0];
-      const senderPSID = isProd ? webhookEvent.sender.id : "";
+    const webhookEvent = body.entry[0].messaging[0];
+    const senderPSID = isProd ? webhookEvent.sender.id : "1234";
 
-      if (webhookEvent.message) {
-        responseBody = handleMessage(webhookEvent.message);
-      } else if (webhookEvent.postback) {
-        responseBody = handlePostback(webhookEvent.postback);
-      }
+    if (webhookEvent.message) {
+      responseBody = await handleMessage(webhookEvent.message, senderPSID);
+    } else if (webhookEvent.postback) {
+      responseBody = handlePostback(webhookEvent.postback);
+    }
+    if (isProd) callSendAPI(senderPSID, responseBody);
 
-      if (isProd) callSendAPI(senderPSID, responseBody);
-    });
     res.status(200).json(responseBody);
   } else {
     res.sendStatus(404);
