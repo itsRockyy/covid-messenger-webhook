@@ -34,13 +34,11 @@ const handleMessage = async ({ text = "" }, senderPSID) => {
     const result = responses[0].queryResult;
     const { queryText = "", fulfillmentText = "", intent = {} } = result;
 
-    console.log(
-      JSON.stringify({
-        queryText,
-        fulfillmentText,
-        intent: result.intent ? intent.displayName : "No intent matched",
-      })
-    );
+    console.log({
+      queryText,
+      fulfillmentText,
+      intent: result.intent ? intent.displayName : "No intent matched",
+    });
     response = {
       text: fulfillmentText,
     };

@@ -13,7 +13,7 @@ const callSendAPI = (id, message) => {
   axios
     .post(`${FB_URL}?access_token=${PAGE_ACCESS_TOKEN}`, body)
     .then((response) => {
-      console.log(JSON.stringify(response));
+      console.log(response);
     })
     .catch((error) => {
       console.error("Unable to send message:" + error);
