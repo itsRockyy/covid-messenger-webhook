@@ -1,11 +1,11 @@
 const dialogflow = require("dialogflow");
 
-const projectId = process.env.DIALOGFLOW_PROJECT_ID;
+const projectId = process.env.DIALOGFLOW_PROJECT_ID || "";
 
 const config = {
   credentials: {
-    private_key: process.env.DIALOGFLOW_PRIVATE_KEY,
-    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+    private_key: process.env.DIALOGFLOW_PRIVATE_KEY || "",
+    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL || "",
   },
 };
 
@@ -33,14 +33,22 @@ const handleMessage = async ({ text = "" }, senderPSID) => {
     const responses = await sessionClient.detectIntent(request);
     const result = responses[0].queryResult;
     const { queryText = "", fulfillmentText = "", intent = {} } = result;
-    if (result.intent) console.log(`Intent: ${intent.displayName}`);
-    else console.log(`  No intent matched.`);
 
+    console.log(
+      JSON.stringify({
+        queryText,
+        fulfillmentText,
+        intent: result.intent ? intent.displayName : "No intent matched",
+      })
+    );
     response = {
       text: fulfillmentText,
     };
   } catch (err) {
     console.log(err);
+    response = {
+      text: "Something went wrong. Please try again.",
+    };
   }
   return response;
 };
